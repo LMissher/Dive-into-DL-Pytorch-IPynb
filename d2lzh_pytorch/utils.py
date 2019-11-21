@@ -145,3 +145,10 @@ def train_ch3(net, train_iter, test_iter, loss, epochs, batch_size, params=None,
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f' %
                (epoch+1,train_l_sum/n,train_acc_sum/n,test_acc))
 
+###################3.7###############3
+# FlattenLayer
+class FlattenLayer(nn.Module):
+    def __init__(self):
+        super(FlattenLayer, self).__init__()
+    def forward(self, x): # x shape: (batch, *, *, ...)
+        return x.view(x.shape[0], -1)
