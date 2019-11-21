@@ -66,3 +66,19 @@ def sgd(params, lr, batch_size):
     # 沿batch维求了平均了。
     for param in params:
         param.data -= lr * param.grad / batch_size # 注意这里更改param时用的param.data
+
+# 将数值转换为文本标签
+def get_fashion_mnist_labels(labels):
+    text_labels = ['t-shirt', 'trouser', 'pullover', 'dress', 'coat', 'sandle', 'shirt', 'sneaker', 'bag', 'ankle boot']
+    return [text_labels[int(i)] for i in labels]
+
+# 一行里画出多张图像和对应标签
+def show_fashion_mnist(images, labels):
+    use_svg_display()
+    _, figs = plt.subplots(1, len(images), figsize=(12,12))
+    for f, img, lbl in zip(figs, images,labels):
+        f.imshow(img.view(28, 28).numpy())
+        f.set_title(lbl)
+        f.axes.get_xaxis().set_visible(False)
+        f.axes.get_yaxis().set_visible(False)
+    plt.show()
