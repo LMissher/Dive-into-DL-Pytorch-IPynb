@@ -112,12 +112,22 @@ def soft_max(X):
 
 
 # 评价模型net在数据集iter上的准确率
-def evaluate_accuracy(data_iter,net):
-    acc_sum , n = 0.0,0
-    for X,y in data_iter:
-        acc_sum += (net(X).argmax(dim=1)==y).float().sum().item()
+def evaluate_accuracy(data_iter, net):
+    acc_sum, n = 0.0, 0
+    for X, y in data_iter:
+        if isinstance(net, torch.nn.Module):
+            net.eval() # 评估模式, 这会关闭dropout
+            acc_sum += (net(X).argmax(dim=1) == y).float().sum().item()
+            net.train() # 改回训练模式
+        else: # 自定义的模型
+            if('is_training' in net.__code__.co_varnames): # 如果有is_training这个参数
+                # 将is_training设置成False
+                acc_sum += (net(X, is_training=False).argmax(dim=1) == y).float().sum().item() 
+            else:
+                acc_sum += (net(X).argmax(dim=1) == y).float().sum().item() 
         n += y.shape[0]
-    return acc_sum/n
+    return acc_sum / n
+
 
 #softmax模型训练
 def train_ch3(net, train_iter, test_iter, loss, epochs, batch_size, params=None, lr=None, optimizer=None):
