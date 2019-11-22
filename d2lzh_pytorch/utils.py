@@ -102,6 +102,8 @@ def load_data_fashion_mnist(batch_size,root='~/DL/Datasets/FashionMNIST'):
                                         =batch_size,shuffle=False,num_workers=num_workers)
     return train_iter, test_iter
 
+
+###############3.6###################
 # softmax函数
 def soft_max(X):
     X_exp = X.exp()
@@ -145,10 +147,23 @@ def train_ch3(net, train_iter, test_iter, loss, epochs, batch_size, params=None,
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f' %
                (epoch+1,train_l_sum/n,train_acc_sum/n,test_acc))
 
-###################3.7###############3
+###################3.7##################
 # FlattenLayer
 class FlattenLayer(nn.Module):
     def __init__(self):
         super(FlattenLayer, self).__init__()
     def forward(self, x): # x shape: (batch, *, *, ...)
         return x.view(x.shape[0], -1)
+
+
+####################3.11##################
+# 作图函数
+def semilogy(x_vals, y_vals, x_label, y_label, x2_vals=None, y2_vals=None,
+             legend=None, figsize=(3.5, 2.5)):
+    set_figsize(figsize)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.semilogy(x_vals, y_vals)
+    if x2_vals and y2_vals:
+        plt.semilogy(x2_vals, y2_vals, linestyle=':')
+        plt.legend(legend)
