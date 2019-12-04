@@ -86,12 +86,17 @@ def show_fashion_mnist(images, labels):
     plt.show()
 
 # 加载数据集并返回iter
-def load_data_fashion_mnist(batch_size,root='~/DL/Datasets/FashionMNIST'):
-    transform = transforms.ToTensor()
+def load_data_fashion_mnist(batch_size,resize=None,root='~/DL/Datasets/FashionMNIST'):
+    trans = []
+    if resize:
+       trans.append(torchvision.transforms.Resize(size=resize))
+    trans.append(torchvision.transforms.ToTensor())
+
+    transform = torchvision.transforms.Compose(trans)
     mnist_train = torchvision.datasets.FashionMNIST(
-    root=root, train=True, download=True, transform=transforms.ToTensor())
+    root=root, train=True, download=True, transform=transform)
     mnist_test = torchvision.datasets.FashionMNIST(
-    root=root, train=False, download=True, transform=transforms.ToTensor())
+    root=root, train=False, download=True, transform=transform)
     if sys.platform.startswith('win'):
         num_workers = 0
     else:
@@ -211,6 +216,7 @@ def train_ch5(net, train_iter, test_iter, batch_size, optimizer, device, epochs)
             train_acc_sum += (y_hat.argmax(dim=1)==y).sum().cpu().item()
             n += y.shape[0]
             batch_count += 1
+            print('step %d, train_acc: %.4f'%(batch_count, train_acc_sum/n))
         test_acc = evaluate_accuracy(test_iter, net)
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f, time %.1f sec'
               % (epoch, train_l_sum / batch_count, train_acc_sum / n, test_acc, time.time() - start))
