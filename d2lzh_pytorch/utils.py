@@ -220,3 +220,10 @@ def train_ch5(net, train_iter, test_iter, batch_size, optimizer, device, epochs)
         test_acc = evaluate_accuracy(test_iter, net)
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f, time %.1f sec'
               % (epoch, train_l_sum / batch_count, train_acc_sum / n, test_acc, time.time() - start))
+
+#######################5.8#################
+class GlobalAvgPool2d(nn.Module):
+      def __init__(self):
+          super(GlobalAvgPool2d, self).__init__()
+      def forward(self, x):
+          return F.avg_pool2d(x, kernel_size=x.size()[2:])
