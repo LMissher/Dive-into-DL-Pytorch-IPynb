@@ -125,7 +125,7 @@ def evaluate_accuracy(data_iter, net, device=None):
          for X, y in data_iter:
              if isinstance(net, torch.nn.Module):
                 net.eval() # 评估模式, 这会关闭dropout
-                acc_sum += (net(X).argmax(dim=1) == y).float().sum().item()
+                acc_sum += (net(X.to(device)).argmax(dim=1) == y.to(device)).float().sum().item()
                 net.train() # 改回训练模式
              else: # 自定义的模型
                 if('is_training' in net.__code__.co_varnames): # 如果有is_training这个参数
@@ -216,8 +216,8 @@ def train_ch5(net, train_iter, test_iter, batch_size, optimizer, device, epochs)
             train_acc_sum += (y_hat.argmax(dim=1)==y).sum().cpu().item()
             n += y.shape[0]
             batch_count += 1
-            print('step %d, train_acc: %.4f'%(batch_count, train_acc_sum/n))
-        test_acc = evaluate_accuracy(test_iter, net)
+            # print('step %d, train_acc: %.4f'%(batch_count, train_acc_sum/n))
+        test_acc = evaluate_accuracy(test_iter, net, device)
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f, time %.1f sec'
               % (epoch, train_l_sum / batch_count, train_acc_sum / n, test_acc, time.time() - start))
 
